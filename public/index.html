@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQ Smart Queue</title>
+<style>
+body{font-family:Arial;background:#f0f2f5;text-align:center;padding:40px}
+h1{color:#1a73e8}
+.card{background:white;padding:25px;border-radius:15px;max-width:400px;margin:20px auto;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+button{background:#1a73e8;color:white;border:none;padding:15px 30px;font-size:18px;border-radius:10px;cursor:pointer}
+button:hover{background:#1557b0}
+#num{font-size:60px;font-weight:bold;color:#1a73e8;margin:20px}
+</style>
+</head>
+<body>
+<h1>SQ Smart Queue</h1>
+<p>Onlayn növbə sistemi</p>
+<div class="card">
+<p>İndiki nömrə:</p>
+<div id="num">0</div>
+<button onclick="take()">Növbə Götür</button>
+</div>
+<script>
+let n = 0;
+function take(){
+  n++;
+  document.getElementById('num').innerText = n;
+  alert('Sizin nömrəniz: ' + n);
+}
+</script>
+</body>
+</html>
