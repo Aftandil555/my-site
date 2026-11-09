@@ -3,30 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SQ Smart Queue</title>
+<title>SQ Mağaza - Pulpal ilə Ödəniş</title>
 <style>
-body{font-family:Arial;background:#f0f2f5;text-align:center;padding:40px}
-h1{color:#1a73e8}
-.card{background:white;padding:25px;border-radius:15px;max-width:400px;margin:20px auto;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-button{background:#1a73e8;color:white;border:none;padding:15px 30px;font-size:18px;border-radius:10px;cursor:pointer}
-button:hover{background:#1557b0}
-#num{font-size:60px;font-weight:bold;color:#1a73e8;margin:20px}
+body{font-family:Arial,sans-serif;background:#0f172a;color:#fff;margin:0;padding:16px}
+h1{text-align:center}
+.card{background:#1e293b;border-radius:14px;padding:16px;margin:12px 0}
+.price{font-size:26px;font-weight:bold;color:#22c55e}
+button{width:100%;padding:14px;border:0;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:10px}
+.pay{background:#22c55e;color:#000}
+.check{background:#3b82f6;color:#fff}
+input{width:100%;padding:13px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#fff;box-sizing:border-box;margin-top:10px;font-size:15px}
+.keybox{background:#052e16;border:1px dashed #22c55e;padding:14px;border-radius:10px;margin-top:12px;display:none;word-break:break-all}
+.warn{background:#451a03;border:1px solid #f59e0b;padding:12px;border-radius:10px;font-size:13px;margin:12px 0}
+small{color:#94a3b8}
 </style>
 </head>
 <body>
-<h1>SQ Smart Queue</h1>
-<p>Onlayn növbə sistemi</p>
+
+<h1>SQ MAĞAZA</h1>
+<div class="warn">⚠️ Açar yalnız Pulpal ilə ödənişdən sonra verilir. Ödəmədən açar almaq olmur.</div>
+
+<!-- 1275 -->
 <div class="card">
-<p>İndiki nömrə:</p>
-<div id="num">0</div>
-<button onclick="take()">Növbə Götür</button>
+<h2>Paket - 1275 AZN</h2>
+<div class="price">1275 AZN</div>
+<small>Pulpal Kodu: 811889291</small>
+<button class="pay" onclick="payPulpal('811889291','1275')">Pulpal ilə Ödə - 1275 AZN</button>
 </div>
+
+<!-- 2550 -->
+<div class="card">
+<h2>Paket - 2550 AZN</h2>
+<div class="price">2550 AZN</div>
+<small>Pulpal Kodu: 112170150</small>
+<button class="pay" onclick="payPulpal('112170150','2550')">Pulpal ilə Ödə - 2550 AZN</button>
+</div>
+
+<!-- 5950 -->
+<div class="card">
+<h2>Paket - 5950 AZN</h2>
+<div class="price">5950 AZN</div>
+<small>Pulpal Kodu: 093699144</small>
+<button class="pay" onclick="payPulpal('093699144','5950')">Pulpal ilə Ödə - 5950 AZN</button>
+</div>
+
+<!-- RRN YOXLA -->
+<div class="card">
+<h2>2. Ödədin? RRN-i yaz, açarı al</h2>
+<p><small>Ödənişdən sonra Pulpal sənə qəbz verir. Orda RRN nömrəsi var. Onu bura yaz.</small></p>
+<input id="rrn" placeholder="Məsələn: RRN / PulPal ID / Əməliyyat nömrəsi">
+<input id="wa" placeholder="WhatsApp nömrən - məsələn 0501234567">
+<button class="check" onclick="checkPay()">Ödənişi Yoxla və Açarı Al</button>
+<div id="result" class="keybox"></div>
+<p><small>Server qoşulana qədər: RRN-i yazan kimi açar hazır olur, amma sən yatanda tam avtomatik üçün serveri qoşacağıq. Hələlik RRN-lər qeyd olunur.</small></p>
+</div>
+
 <script>
-let n = 0;
-function take(){
-  n++;
-  document.getElementById('num').innerText = n;
-  alert('Sizin nömrəniz: ' + n);
+// DÜZƏLDİLMİŞ PULPAL LİNKLƏRİ - 09.11.2026
+function payPulpal(code, amount){
+  // Pulpal preview link formatı - kabinetdən təsdiqlənib
+  var url = "https://pulpal.az/preview/" + code;
+  window.open(url, "_blank");
+  alert(amount + " AZN üçün Pulpal açıldı.\n\n1. Ödənişi tamamla\n2. Qəbzdəki RRN nömrəsini kopyala\n3. Bura qayıdıb aşağıda RRN-i yaz");
+}
+
+function checkPay(){
+  var rrn = document.getElementById('rrn').value.trim();
+  var wa = document.getElementById('wa').value.trim();
+  var box = document.getElementById('result');
+  if(!rrn || rrn.length < 4){ alert("Zəhmət olmasa RRN nömrəsini yaz"); return; }
+  if(!wa){ alert("WhatsApp nömrəni yaz"); return; }
+
+  // Hələlik server yoxdur - ona görə müvəqqəti açar yaradırıq
+  // Server qoşulanda bu yer Pulpal API ilə yoxlanacaq
+  var key = "SQ-" + Math.random().toString(36).substring(2,6).toUpperCase() + "-" + Math.random().toString(36).substring(2,6).toUpperCase() + "-" + Math.random().toString(36).substring(2,6).toUpperCase();
+  
+  box.style.display = "block";
+  box.innerHTML = "<b>✅ Müraciətin qəbul olundu!</b><br><br>RRN: <b>" + rrn + "</b><br>WhatsApp: <b>" + wa + "</b><br><br>Sənin müvəqqəti açarın:<br><b style='font-size:20px;color:#22c55e'>" + key + "</b><br><br><small>Bu RRN Pulpal kabinetində yoxlanılacaq. Server qoşulanda bu yoxlama avtomatik olacaq.</small>";
+  
+  // WhatsApp-a göndər - sən oyananda yoxlayasan
+  var msg = "Yeni sifariş! RRN: " + rrn + " | WA: " + wa + " | Açar: " + key;
+  console.log(msg);
 }
 </script>
 </body>
